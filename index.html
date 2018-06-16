@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <title>Shopping List</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
     <div class="container">
         <h1>Shopping List</h1>
+        <div class ="hidden-checkbox">
+            <label for="hidden-toggle">Check to Hide Items</label>
+            <input type="checkbox" name="hidden-toggle" id="hidden-toggle" class="js-hidden-checkbox-toggle">
+            <!-- <label><input type="checkbox" name="hide-checked-toggle" id="hide-checked-toggle" class="js-hide-checked-toggle">Hide Items</label> -->
+        </div>
         <form id="js-shopping-list-form">
             <label for="shopping-list-entry">Add an item</label>
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
-            <button type="submit">Add item</button>
         </form>
         <ul class="shopping-list js-shopping-list">
         </ul>

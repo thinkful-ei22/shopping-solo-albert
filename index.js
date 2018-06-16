@@ -7,8 +7,11 @@ const STORE = [
   {name: 'bread', checked: false}
 ];
 
+// Add a property to STORE array that would adjust the state.
 
-function generateItemElement(item, itemIndex, template) {
+// #3 MOST IMPORTANT FUNCTION
+
+function generateItemElement(item, itemIndex) {
   return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
       <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
@@ -23,19 +26,21 @@ function generateItemElement(item, itemIndex, template) {
     </li>`;
 }
 
+// #2 IMPORTANT FUNCTION  THIS TAKES THE STORE STRING
 
 function generateShoppingItemsString(shoppingList) {
-  console.log('Generating shopping list element');
+ // console.log('Generating shopping list element');
 
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
 
   return items.join('');
 }
 
-
+// #1 IMPORTANT FUNCTION THIS STARTS FIRST!
+// ADJUST THE RENDER TO MANIPULATE THE DISPLAY
 function renderShoppingList() {
   // render the shopping list in the DOM
-  console.log('`renderShoppingList` ran');
+ // console.log('`renderShoppingList` ran');
   const shoppingListItemsString = generateShoppingItemsString(STORE);
 
   // insert that HTML into the DOM
@@ -44,14 +49,14 @@ function renderShoppingList() {
 
 
 function addItemToShoppingList(itemName) {
-  console.log(`Adding "${itemName}" to shopping list`);
+ // console.log(`Adding "${itemName}" to shopping list`);
   STORE.push({name: itemName, checked: false});
 }
 
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
-    console.log('`handleNewItemSubmit` ran');
+ //   console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
     addItemToShoppingList(newItemName);
@@ -60,9 +65,50 @@ function handleNewItemSubmit() {
 }
 
 function toggleCheckedForListItem(itemIndex) {
-  console.log('Toggling checked property for item at index ' + itemIndex);
+//  console.log('Toggling checked property for item at index ' + itemIndex);
   STORE[itemIndex].checked = !STORE[itemIndex].checked;
 }
+
+// ******************** NEW SECTION ********************************
+
+
+
+
+function toggleDisplayCheckedItems(){
+  // console.log('`toggleDisplayCheckedItems` ran');
+// 1. User can press(click)(done) a switch/checkbox(.js-hidden-checkbox)[DONE]
+// to toggle(.toggle) between
+// DISPLAYING ALL ITEMS OR DISPLAYING ONLY ITEMS THAT ARE UNCHECKED
+
+  $('.js-hidden-checkbox-toggle').on('click','.js-item-toggle', event =>{
+   //event.preventDefault();
+    console.log($('.js-shopping-list-entry').val());
+//console.log(getItemIndexFromElement(event.currentTarget));
+//console.log(toggleCheckedForListItem(eventStoreItems));
+//console.log('`toggleDisplayCheckedItems` ran');
+
+  });
+  renderShoppingList();
+
+
+}
+
+function displayedItemsFiltered() {
+
+
+  // User can type in a search term and the displayed list will be filtered by item names only containing that search term
+}
+
+function editTitleOfItem(){
+
+
+  // User can edit the title of an item
+}
+
+// You must use the state management pattern. Update the store; run the render function. Do not directly update the DOM.
+
+
+// **********************************************************
 
 
 function getItemIndexFromElement(item) {
@@ -74,7 +120,7 @@ function getItemIndexFromElement(item) {
 
 function handleItemCheckClicked() {
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
-    console.log('`handleItemCheckClicked` ran');
+  //  console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
@@ -94,7 +140,6 @@ function deleteListItem(itemIndex) {
 function handleDeleteItemClicked() {
   $('.js-shopping-list').on('click', '.js-item-delete', function(event) {
     const indexDelete =  getItemIndexFromElement(event.currentTarget);
-
     deleteListItem(indexDelete);
     renderShoppingList();
     //As a user, I can delete an item from the list
@@ -112,6 +157,9 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  toggleDisplayCheckedItems();
+  // editTitleOfItem();
+  // displayedItemsFiltered();
 }
 
 // when the page loads, call `handleShoppingList`
