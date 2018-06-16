@@ -76,35 +76,23 @@ function toggleCheckedForListItem(itemIndex) {
 
 function toggleDisplayCheckedItems(){
   // console.log('`toggleDisplayCheckedItems` ran');
-// 1. User can press(click)(done) a switch/checkbox(.js-hidden-checkbox)[DONE]
-// to toggle(.toggle) between
-// DISPLAYING ALL ITEMS OR DISPLAYING ONLY ITEMS THAT ARE UNCHECKED
-
-  $('.js-hidden-checkbox-toggle').on('click','.js-item-toggle', event =>{
-   //event.preventDefault();
-    console.log($('.js-shopping-list-entry').val());
-//console.log(getItemIndexFromElement(event.currentTarget));
-//console.log(toggleCheckedForListItem(eventStoreItems));
-//console.log('`toggleDisplayCheckedItems` ran');
+  //$('.js-shopping-list-entry').on('change','.js-hidden-checkbox-toggle', event =>{
+  $('.js-hidden-checkbox-toggle').on('click', event =>{
+// save reference to this checkbox
+const targetCheckbox  = $(this);
+console.log(targetCheckbox);
 
   });
   renderShoppingList();
 
-
 }
 
-function displayedItemsFiltered() {
 
-
+// 1. User can press(click)(done) a switch/checkbox(.js-hidden-checkbox)[DONE]
+// to toggle(.toggle) between
+// DISPLAYING ALL ITEMS OR DISPLAYING ONLY ITEMS THAT ARE UNCHECKED
   // User can type in a search term and the displayed list will be filtered by item names only containing that search term
-}
-
-function editTitleOfItem(){
-
-
   // User can edit the title of an item
-}
-
 // You must use the state management pattern. Update the store; run the render function. Do not directly update the DOM.
 
 
@@ -126,12 +114,8 @@ function handleItemCheckClicked() {
     renderShoppingList();
   });
 }
-// (optional) Get info from DOM related to user action
-// Change the store
-// Render
 
 //function to actually delete item from array
-
 function deleteListItem(itemIndex) {
   console.log(`deleting item from index ${itemIndex} from STORE list`);
   STORE.splice(itemIndex, 1);
@@ -158,8 +142,6 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   toggleDisplayCheckedItems();
-  // editTitleOfItem();
-  // displayedItemsFiltered();
 }
 
 // when the page loads, call `handleShoppingList`
