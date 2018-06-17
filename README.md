@@ -1,6 +1,8 @@
 # Shopping List App
 
-### The following updated features will be added to the new version of the shopping list app. Which will require a more complex store object:
+### The following updated features will be added to the new version of the shopping list app.
+### The 'complex' state management object was set outside of the current STORE object, but it works!
+
 
 * User can press a switch/checkbox to toggle between displaying all items or displaying only items that are unchecked
 * User can type in a search term and the displayed list will be filtered by item names only containing that search term
