@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use strict';
 
 const STORE = [
@@ -7,10 +8,21 @@ const STORE = [
   {name: 'bread', checked: false}
 ];
 
-// Add a property to STORE array that would adjust the state.
+// Separate object that would adjust the state.
+let State = {
+  showCheckedOnly: true,
+  searchString: '',
+};
 
-// #3 MOST IMPORTANT FUNCTION
 
+// Object destruction to toggle the state
+const setState = function (newState) {
+  State = { ...State, ...newState };
+  renderShoppingList();
+};
+
+
+// Post HTML to the DOM
 function generateItemElement(item, itemIndex) {
   return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
@@ -26,37 +38,50 @@ function generateItemElement(item, itemIndex) {
     </li>`;
 }
 
-// #2 IMPORTANT FUNCTION  THIS TAKES THE STORE STRING
 
+
+// Parse the string and create a list of strings to be returned
 function generateShoppingItemsString(shoppingList) {
- // console.log('Generating shopping list element');
+  console.log('Generating shopping list element');
 
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
 
   return items.join('');
 }
 
-// #1 IMPORTANT FUNCTION THIS STARTS FIRST!
-// ADJUST THE RENDER TO MANIPULATE THE DISPLAY
-function renderShoppingList() {
-  // render the shopping list in the DOM
- // console.log('`renderShoppingList` ran');
-  const shoppingListItemsString = generateShoppingItemsString(STORE);
 
-  // insert that HTML into the DOM
+
+  // render the shopping list in the DOM
+function renderShoppingList() {
+    console.log('`renderShoppingList` ran');
+
+  // Filter for Checked/Unchecked item
+  let filteredStore = STORE.filter(item => item.checked === State.showCheckedOnly)
+  //Filter for search Query
+  if(State.searchString.trim()) {
+    filteredStore = STORE.filter(item => item.name.includes(State.searchString))
+  }
+  const shoppingListItemsString = generateShoppingItemsString(STORE);
+    // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
 }
 
 
+
+
+
 function addItemToShoppingList(itemName) {
- // console.log(`Adding "${itemName}" to shopping list`);
-  STORE.push({name: itemName, checked: false});
+ console.log(`Adding "${itemName}" to shopping list`);
+ STORE.push({name: itemName, checked: false});
 }
+
+
+
 
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
- //   console.log('`handleNewItemSubmit` ran');
+    console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
     addItemToShoppingList(newItemName);
@@ -64,27 +89,28 @@ function handleNewItemSubmit() {
   });
 }
 
+
+
 function toggleCheckedForListItem(itemIndex) {
 //  console.log('Toggling checked property for item at index ' + itemIndex);
-  STORE[itemIndex].checked = !STORE[itemIndex].checked;
+// STORE[itemIndex].checked = !STORE[itemIndex].checked;
+
 }
 
 // ******************** NEW SECTION ********************************
 
 
 
-
+// toggle the Checkbox using the State object
 function toggleDisplayCheckedItems(){
-  // console.log('`toggleDisplayCheckedItems` ran');
-  //$('.js-shopping-list-entry').on('change','.js-hidden-checkbox-toggle', event =>{
-  $('.js-hidden-checkbox-toggle').on('click', event =>{
-// save reference to this checkbox
-const targetCheckbox  = $(this);
-console.log(targetCheckbox);
+  console.log('`toggleDisplayCheckedItems` ran');
 
-  });
+    $('.js-hidden-checkbox-toggle').on('click', event =>{
+      const element = event.currentTarget;
+      const checked = element.checked;
+      setState({ showCheckedOnly: checked })
+    });
   renderShoppingList();
-
 }
 
 
