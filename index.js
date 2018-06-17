@@ -93,12 +93,9 @@ function handleNewItemSubmit() {
 
 function toggleCheckedForListItem(itemIndex) {
 //  console.log('Toggling checked property for item at index ' + itemIndex);
-// STORE[itemIndex].checked = !STORE[itemIndex].checked;
+STORE[itemIndex].checked = !STORE[itemIndex].checked;
 
 }
-
-// ******************** NEW SECTION ********************************
-
 
 
 // toggle the Checkbox using the State object
