@@ -1,31 +1,32 @@
-/* eslint-disable */
 'use strict';
 
 const STORE = [
-  {name: 'apples', checked: false},
-  {name: 'oranges', checked: false},
-  {name: 'milk', checked: true},
-  {name: 'bread', checked: false}
+  {id: cuid(), name: 'apples', checked: false},
+  {id: cuid(), name: 'oranges', checked: false},
+  {id: cuid(), name: 'milk', checked: true},
+  {id: cuid(), name: 'bread', checked: false}
 ];
 
-// Separate object that would adjust the state.
+// Separate object that would adjust the state
 let State = {
   showCheckedOnly: true,
   searchString: '',
-};
+}
 
-
-// Object destruction to toggle the state
-const setState = function (newState) {
+// Object destructuring to update the state
+function setState(newState) {
   State = { ...State, ...newState };
-  renderShoppingList();
-};
+  // State = { showCheckedOnly: true, searchString: 'asd', showCheckedOnly: false };
+  renderShoppingList()
+}
 
 
-// Post HTML to the DOM
+
+// Add a property to STORE array that would adjust the state.
+
 function generateItemElement(item, itemIndex) {
   return `
-    <li class="js-item-index-element" data-item-index="${itemIndex}">
+    <li class="js-item-index-element" data-item-index="${itemIndex}" data-item-id="${item.id}">
       <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
@@ -38,50 +39,41 @@ function generateItemElement(item, itemIndex) {
     </li>`;
 }
 
-
-
 // Parse the string and create a list of strings to be returned
+
 function generateShoppingItemsString(shoppingList) {
-  console.log('Generating shopping list element');
+ // console.log('Generating shopping list element');
 
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
 
   return items.join('');
 }
 
-
-
   // render the shopping list in the DOM
 function renderShoppingList() {
-    console.log('`renderShoppingList` ran');
 
   // Filter for Checked/Unchecked item
   let filteredStore = STORE.filter(item => item.checked === State.showCheckedOnly)
-  //Filter for search Query
-  if(State.searchString.trim()) {
+  // Filter for search Query
+  if (State.searchString.trim()) {
     filteredStore = STORE.filter(item => item.name.includes(State.searchString))
   }
-  const shoppingListItemsString = generateShoppingItemsString(STORE);
-    // insert that HTML into the DOM
+  const shoppingListItemsString = generateShoppingItemsString(filteredStore);
+
+  // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
 }
 
 
-
-
-
 function addItemToShoppingList(itemName) {
- console.log(`Adding "${itemName}" to shopping list`);
- STORE.push({name: itemName, checked: false});
+ // console.log(`Adding "${itemName}" to shopping list`);
+  STORE.push({name: itemName, checked: false});
 }
-
-
-
 
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
-    console.log('`handleNewItemSubmit` ran');
+ //   console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
     addItemToShoppingList(newItemName);
@@ -89,44 +81,38 @@ function handleNewItemSubmit() {
   });
 }
 
-
-
 function toggleCheckedForListItem(itemIndex) {
 //  console.log('Toggling checked property for item at index ' + itemIndex);
-STORE[itemIndex].checked = !STORE[itemIndex].checked;
-
+  STORE[itemIndex].checked = !STORE[itemIndex].checked;
 }
-
 
 // toggle the Checkbox using the State object
 function toggleDisplayCheckedItems(){
-  console.log('`toggleDisplayCheckedItems` ran');
+  // console.log('`toggleDisplayCheckedItems` ran');
 
-    $('.js-hidden-checkbox-toggle').on('click', event =>{
-      const element = event.currentTarget;
-      const checked = element.checked;
-      setState({ showCheckedOnly: checked })
-    });
+  $('.js-hidden-checkbox-toggle').on('click', event => {
+    const element = event.currentTarget;
+    const checked = element.checked;
+    setState({ showCheckedOnly: checked })
+  });
   renderShoppingList();
+
 }
 
-
-// 1. User can press(click)(done) a switch/checkbox(.js-hidden-checkbox)[DONE]
-// to toggle(.toggle) between
-// DISPLAYING ALL ITEMS OR DISPLAYING ONLY ITEMS THAT ARE UNCHECKED
-  // User can type in a search term and the displayed list will be filtered by item names only containing that search term
-  // User can edit the title of an item
-// You must use the state management pattern. Update the store; run the render function. Do not directly update the DOM.
-
-
-// **********************************************************
-
-
+// return the item index from the DOM
 function getItemIndexFromElement(item) {
   const itemIndexString = $(item)
     .closest('.js-item-index-element')
     .attr('data-item-index');
   return parseInt(itemIndexString, 10);
+}
+
+// return the item id
+function getItemIdFromElement(item) {
+  const itemIdString = $(item)
+    .closest('.js-item-index-element')
+    .attr('data-item-id');
+  return itemIdString;
 }
 
 function handleItemCheckClicked() {
@@ -138,19 +124,30 @@ function handleItemCheckClicked() {
   });
 }
 
-//function to actually delete item from array
-function deleteListItem(itemIndex) {
-  console.log(`deleting item from index ${itemIndex} from STORE list`);
-  STORE.splice(itemIndex, 1);
+// delete item from array by id instead of index
+function deleteListItem(id) {
+  console.log(`deleting item from id ${id}`);
+  const listItemIndex = STORE.findIndex(item => item.id === id);
+  STORE.splice(listItemIndex, 1);
 }
 
+// delete item from the DOM using id instead of index
 function handleDeleteItemClicked() {
   $('.js-shopping-list').on('click', '.js-item-delete', function(event) {
-    const indexDelete =  getItemIndexFromElement(event.currentTarget);
-    deleteListItem(indexDelete);
+    const itemId =  getItemIdFromElement(event.currentTarget);
+    deleteListItem(itemId);
     renderShoppingList();
     //As a user, I can delete an item from the list
     console.log('`handleDeleteItemClicked` ran');
+  });
+
+}
+
+// function to filter search
+function handleSearchType() {
+  $('.js-shopping-filter').on('keyup', event => {
+    console.log('User typed', event.currentTarget.value);
+    setState({searchString: event.currentTarget.value})
   });
 
 }
@@ -165,6 +162,7 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   toggleDisplayCheckedItems();
+  handleSearchType();
 }
 
 // when the page loads, call `handleShoppingList`
