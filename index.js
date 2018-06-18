@@ -1,21 +1,21 @@
 'use strict';
 
 const STORE = [
-  {id: cuid(), name: 'apples', checked: false},
-  {id: cuid(), name: 'oranges', checked: false},
-  {id: cuid(), name: 'milk', checked: true},
-  {id: cuid(), name: 'bread', checked: false}
+  {id: cuid(), name: 'apples', checked: false },
+  {id: cuid(), name: 'oranges', checked: false },
+  {id: cuid(), name: 'milk', checked: true },
+  {id: cuid(), name: 'bread', checked: false }
 ];
 
 // Separate object that would adjust the state
 let State = {
-  showCheckedOnly: true,
+  showCheckedOnly: false,
   searchString: '',
 }
 
 // Object destructuring to update the state
 function setState(newState) {
-  State = { ...State, ...newState };
+   State = { ...State, ...newState }
   // State = { showCheckedOnly: true, searchString: 'asd', showCheckedOnly: false };
   renderShoppingList()
 }
@@ -30,10 +30,13 @@ function generateItemElement(item, itemIndex) {
       <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
-            <span class="button-label">check</span>
+            <span class="button-label">Check</span>
         </button>
         <button class="shopping-item-delete js-item-delete">
-            <span class="button-label">delete</span>
+            <span class="button-label">Delete</span>
+        </button>
+        <button class="shopping-item-edit-title js-item-edit-title">
+            <span class="button-label">Edit</span>
         </button>
       </div>
     </li>`;
@@ -43,9 +46,7 @@ function generateItemElement(item, itemIndex) {
 
 function generateShoppingItemsString(shoppingList) {
  // console.log('Generating shopping list element');
-
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
-
   return items.join('');
 }
 
@@ -53,11 +54,18 @@ function generateShoppingItemsString(shoppingList) {
 function renderShoppingList() {
 
   // Filter for Checked/Unchecked item
-  let filteredStore = STORE.filter(item => item.checked === State.showCheckedOnly)
+   let filteredStore = STORE;
+
+   if(State.showCheckedOnly){
+    filteredStore = STORE.filter(item => item.checked === State.showCheckedOnly)
+   }
+
   // Filter for search Query
+
   if (State.searchString.trim()) {
-    filteredStore = STORE.filter(item => item.name.includes(State.searchString))
+    filteredStore = filteredStore.filter(item => item.name.includes(State.searchString))
   }
+
   const shoppingListItemsString = generateShoppingItemsString(filteredStore);
 
   // insert that HTML into the DOM
@@ -66,7 +74,7 @@ function renderShoppingList() {
 
 
 function addItemToShoppingList(itemName) {
- // console.log(`Adding "${itemName}" to shopping list`);
+  console.log(`Adding "${itemName}" to shopping list`);
   STORE.push({name: itemName, checked: false});
 }
 
@@ -76,6 +84,7 @@ function handleNewItemSubmit() {
  //   console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
+
     addItemToShoppingList(newItemName);
     renderShoppingList();
   });
@@ -86,18 +95,19 @@ function toggleCheckedForListItem(itemIndex) {
   STORE[itemIndex].checked = !STORE[itemIndex].checked;
 }
 
-// toggle the Checkbox using the State object
+// toggle the checkbox using the State object
 function toggleDisplayCheckedItems(){
-  // console.log('`toggleDisplayCheckedItems` ran');
-
-  $('.js-hidden-checkbox-toggle').on('click', event => {
+ //  console.log('`toggleDisplayCheckedItems` ran');
+  $('#js-hidden-checkbox-toggle').on('click',  event => {
     const element = event.currentTarget;
     const checked = element.checked;
     setState({ showCheckedOnly: checked })
+
   });
   renderShoppingList();
-
 }
+
+
 
 // return the item index from the DOM
 function getItemIndexFromElement(item) {
@@ -117,19 +127,21 @@ function getItemIdFromElement(item) {
 
 function handleItemCheckClicked() {
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
-  //  console.log('`handleItemCheckClicked` ran');
+    console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
+
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
   });
 }
 
-// delete item from array by id instead of index
+// helper function to delete item from array by id
 function deleteListItem(id) {
-  console.log(`deleting item from id ${id}`);
+ // console.log(`deleting item from id ${id}`);
   const listItemIndex = STORE.findIndex(item => item.id === id);
   STORE.splice(listItemIndex, 1);
 }
+
 
 // delete item from the DOM using id instead of index
 function handleDeleteItemClicked() {
@@ -140,17 +152,36 @@ function handleDeleteItemClicked() {
     //As a user, I can delete an item from the list
     console.log('`handleDeleteItemClicked` ran');
   });
-
 }
+
+
+
 
 // function to filter search
 function handleSearchType() {
   $('.js-shopping-filter').on('keyup', event => {
-    console.log('User typed', event.currentTarget.value);
+   // console.log('User typed', event.currentTarget.value);
     setState({searchString: event.currentTarget.value})
   });
 
 }
+
+// function editTitleOfName( newItemIndex, newTitle){
+//   STORE.items[itemIndex].name = newTitle;
+// }
+
+
+// function titleEdit(){
+
+//   $('.js-shopping-list').on('click', '.js-item-edit-title', event =>{
+//     const newItemIndex = getItemIndexFromElement(event.currentTarget);
+//     const newTitle = (`.${newItemIndex}`).val();
+//     if(newTitle !== '') return editTitleOfName (newItemIndex, newTitle);
+
+//     renderShoppingList();
+// });
+
+
 
 // this function will be our callback when the page loads. it's responsible for
 // initially rendering the shopping list, and activating our individual functions
@@ -163,6 +194,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   toggleDisplayCheckedItems();
   handleSearchType();
+  //titleEdit();
 }
 
 // when the page loads, call `handleShoppingList`
