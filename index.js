@@ -27,7 +27,7 @@ function setState(newState) {
 function generateItemElement(item, itemIndex) {
   return `
     <li class="js-item-index-element" data-item-index="${itemIndex}" data-item-id="${item.id}">
-      <span class="shopping-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}">${item.name}</span>
+       <input type="text" class="shopping-item js-edit-item js-shopping-item ${item.checked ? 'shopping-item__checked' : ''}" value= "${item.name}"/> 
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">Check</span>
@@ -156,6 +156,17 @@ function handleDeleteItemClicked() {
 
 
 
+  function editShoppingListTitles() {
+    $('.js-shopping-list').on('submit', '.js-edit-item', event => {
+      event.preventDefault();
+      const id = getItemIdFromElement(event.currentTarget);
+      const itemName = $(event.currentTarget).find('.shopping-item').val();
+      STORE.push({name: itemName, checked: false});
+     renderShoppingList();
+    });
+  }
+
+
 
 // function to filter search
 function handleSearchType() {
@@ -167,11 +178,6 @@ function handleSearchType() {
 }
 
 
-// this function will be our callback when the page loads. it's responsible for
-// initially rendering the shopping list, and activating our individual functions
-// that handle new item submission and user clicks on the "check" and "delete" buttons
-// for individual shopping list items.
-
 
 function handleShoppingList() {
   renderShoppingList();
@@ -179,8 +185,9 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   toggleDisplayCheckedItems();
+  editShoppingListTitles(); 
   handleSearchType();
-  //titleEdit();
+  
 }
 
 // when the page loads, call `handleShoppingList`
