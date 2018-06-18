@@ -1,7 +1,7 @@
 # Shopping List App
 
 ### The following updated features will be added to the new version of the shopping list app.
-### The 'complex' state management object was set outside of the current STORE object, but it works!
+### The 'complex' state management object was set outside of the current STORE object.
 
 
 * User can press a switch/checkbox to toggle between displaying all items or displaying only items that are unchecked
