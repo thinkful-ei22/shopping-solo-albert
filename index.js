@@ -45,7 +45,7 @@ function generateItemElement(item, itemIndex) {
 // Parse the string and create a list of strings to be returned
 
 function generateShoppingItemsString(shoppingList) {
- // console.log('Generating shopping list element');
+  console.log('Generating shopping list element');
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
   return items.join('');
 }
@@ -53,9 +53,9 @@ function generateShoppingItemsString(shoppingList) {
   // render the shopping list in the DOM
 function renderShoppingList() {
 
-  // Filter for Checked/Unchecked item
-   let filteredStore = STORE;
 
+   let filteredStore = STORE;
+// Filter for Checked/Unchecked item
    if(State.showCheckedOnly){
     filteredStore = STORE.filter(item => item.checked === State.showCheckedOnly)
    }
@@ -81,7 +81,7 @@ function addItemToShoppingList(itemName) {
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
- //   console.log('`handleNewItemSubmit` ran');
+    console.log('`handleNewItemSubmit` ran');
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
 
@@ -137,9 +137,9 @@ function handleItemCheckClicked() {
 
 // helper function to delete item from array by id
 function deleteListItem(id) {
- // console.log(`deleting item from id ${id}`);
   const listItemIndex = STORE.findIndex(item => item.id === id);
   STORE.splice(listItemIndex, 1);
+  console.log(`deleting item from ${id}`);
 }
 
 
@@ -160,33 +160,19 @@ function handleDeleteItemClicked() {
 // function to filter search
 function handleSearchType() {
   $('.js-shopping-filter').on('keyup', event => {
-   // console.log('User typed', event.currentTarget.value);
+    console.log('User typed', event.currentTarget.value);
     setState({searchString: event.currentTarget.value})
   });
 
 }
-
-// function editTitleOfName( newItemIndex, newTitle){
-//   STORE.items[itemIndex].name = newTitle;
-// }
-
-
-// function titleEdit(){
-
-//   $('.js-shopping-list').on('click', '.js-item-edit-title', event =>{
-//     const newItemIndex = getItemIndexFromElement(event.currentTarget);
-//     const newTitle = (`.${newItemIndex}`).val();
-//     if(newTitle !== '') return editTitleOfName (newItemIndex, newTitle);
-
-//     renderShoppingList();
-// });
-
 
 
 // this function will be our callback when the page loads. it's responsible for
 // initially rendering the shopping list, and activating our individual functions
 // that handle new item submission and user clicks on the "check" and "delete" buttons
 // for individual shopping list items.
+
+
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();
